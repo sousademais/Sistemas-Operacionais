@@ -22,9 +22,8 @@ static double diff_ms(struct timespec start, struct timespec end) {
          + (end.tv_nsec - start.tv_nsec) / 1e6;
 }
 
-// ---------------------------------------------------------------------
 // 1) Função da thread que calcula a MÉDIA
-// ---------------------------------------------------------------------
+
 void *calc_avg(void *arg) {
     (void)arg;  // evita warning de parâmetro não usado
 
@@ -49,13 +48,12 @@ int cmp_int(const void *a, const void *b) {
     return 0;
 }
 
-// ---------------------------------------------------------------------
 // 2) Função da thread que calcula a MEDIANA
-// ---------------------------------------------------------------------
+
 void *calc_med(void *arg) {
     (void)arg;  // evita warning
 
-    // Fazemos uma cópia do vetor para ordenar
+    // Fizemos uma cópia do vetor para ordenar
     int *copy = (int *) malloc(sizeof(int) * N);
     if (!copy) {
         perror("malloc");
@@ -81,22 +79,21 @@ void *calc_med(void *arg) {
     pthread_exit(NULL);
 }
 
-// ---------------------------------------------------------------------
 // 3) Função da thread que calcula o DESVIO PADRÃO
-// ---------------------------------------------------------------------
+
 // Observação: aqui a própria thread calcula a média localmente para
 // não depender da ordem de execução das outras threads.
 void *calc_std(void *arg) {
     (void)arg;  // evita warning
 
-    // 3.1) Calcula a média local
+    // Calcula a média local
     long long sum = 0;
     for (int i = 0; i < N; i++) {
         sum += data[i];
     }
     double mean = (double) sum / (double) N;
 
-    // 3.2) Calcula a variância
+    // Calcula a variância
     double var = 0.0;
     for (int i = 0; i < N; i++) {
         double d = data[i] - mean;
@@ -113,17 +110,16 @@ int main(void) {
     struct timespec c_start, c_end;   // tempo de criação das threads
     pthread_t t1, t2, t3;
 
-    // -----------------------------------------------------------------
-    // 0) Geração dos dados pela thread principal
-    // -----------------------------------------------------------------
+    // Geração dos dados pela thread principal
+   
     srand(0);  // semente fixa para resultados reprodutíveis
     for (int i = 0; i < N; i++) {
         data[i] = rand() % RANGE; // valores entre 0 e 100
     }
 
-    // -----------------------------------------------------------------
+    
     // Versão com 3 threads
-    // -----------------------------------------------------------------
+   
     clock_gettime(CLOCK_MONOTONIC, &t_start);   // início do tempo total
     clock_gettime(CLOCK_MONOTONIC, &c_start);   // início do tempo de criação
 
@@ -148,9 +144,8 @@ int main(void) {
     printf("Tempo criação threads: %.3f ms\n", diff_ms(c_start, c_end));
     printf("Tempo total (inclui join): %.3f ms\n", diff_ms(t_start, t_end));
 
-    // -----------------------------------------------------------------
     // Versão sequencial (1 thread) para comparação
-    // -----------------------------------------------------------------
+
     clock_gettime(CLOCK_MONOTONIC, &t_start);
 
     calc_avg(NULL);
