@@ -1,0 +1,4 @@
+stats_threads
+stats_processes
+*.o
+a.out
