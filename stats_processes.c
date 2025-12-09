@@ -1,18 +1,4 @@
-// arquivo: stats_threads.c
-// Compilação (no WSL / Linux):
-//   gcc -O2 -pthread stats_threads.c -lm -o stats_threads
-// Execução:
-//   ./stats_threads
-//
-// Objetivo:
-//   - Gerar um vetor de 10.000 inteiros no intervalo [0, 100].
-//   - Usar 3 threads para calcular: média, mediana e desvio padrão.
-//   - Armazenar os resultados em variáveis globais.
-//   - Medir tempo de criação das threads e tempo total de execução.
-//   - Refazer os cálculos de forma sequencial (1 thread) e comparar tempos.
-
 #define _POSIX_C_SOURCE 199309L  // habilita CLOCK_MONOTONIC e clock_gettime
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
