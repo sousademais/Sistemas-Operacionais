@@ -1,10 +1,3 @@
-// arquivo: stats_threads.c
-// Objetivo:
-//   - Gerar vetor de 10.000 valores inteiros.
-//   - Calcular média, mediana e desvio padrão usando 3 threads.
-//   - Medir tempo de criação das threads e tempo total.
-//   - Repetir o cálculo de forma sequencial (sem threads) para comparação.
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -25,7 +18,7 @@ static double diff_ms(clock_t start, clock_t end) {
     return (double)(end - start) * 1000.0 / CLOCKS_PER_SEC;
 }
 
-// -------------------- Thread: MÉDIA -----------------------
+// Thread média
 void *calc_avg(void *arg) {
     long long sum = 0;
 
@@ -46,7 +39,7 @@ int cmp_int(const void *a, const void *b) {
     return ia - ib;
 }
 
-// -------------------- Thread: MEDIANA ---------------------
+// Thread mediana 
 void *calc_med(void *arg) {
     // Cria uma cópia do vetor, pois será necessário ordená-lo
     int *copy = malloc(N * sizeof(int));
@@ -72,7 +65,7 @@ void *calc_med(void *arg) {
     return NULL;
 }
 
-// ------------------ Thread: DESVIO PADRÃO -----------------
+// Thread desvio padrão
 void *calc_std(void *arg) {
     long long sum = 0;
 
@@ -82,7 +75,7 @@ void *calc_std(void *arg) {
 
     double mean = (double) sum / (double) N;
 
-    // Em seguida calcula a variância
+    // Calcula a variância
     double var = 0.0;
     for (int i = 0; i < N; i++) {
         double d = data[i] - mean;
@@ -95,7 +88,7 @@ void *calc_std(void *arg) {
     return NULL;
 }
 
-// ------------------------ main ----------------------------
+//Main 
 int main(void) {
     pthread_t t1, t2, t3;          // identificadores das três threads
     clock_t t_start, t_end;        // tempo total
@@ -106,9 +99,8 @@ int main(void) {
     for (int i = 0; i < N; i++)
         data[i] = rand() % RANGE;  // valores entre 0 e 100
 
-    // ======================================================
-    //        PARTE 1 – Execução em 3 threads
-    // ======================================================
+    //1 – Execução em 3 threads
+
     t_start = clock();   // início do tempo total
     c_start = clock();   // início do tempo de criação
 
@@ -134,9 +126,9 @@ int main(void) {
     printf("Tempo criação threads: %.3f ms\n", diff_ms(c_start, c_end));
     printf("Tempo total (inclui join): %.3f ms\n", diff_ms(t_start, t_end));
 
-    // ======================================================
-    //        PARTE 2 – Execução sequencial (1 thread)
-    // ======================================================
+    
+    // 2 – Execução sequencial (1 thread)
+    
     t_start = clock();
 
     // Chamadas diretas das funções, sem criar threads
